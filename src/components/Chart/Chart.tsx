@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
-import { createChart } from 'lightweight-charts';
+import { createChart, CrosshairMode, LineStyle} from 'lightweight-charts';
 import styles from './Chart.module.scss';
 
 export const Chart = (props :any) => {
@@ -8,26 +8,36 @@ export const Chart = (props :any) => {
     var created = false;
     var candlestickSeries: any = null;
     var chart: any = null;
+    const [data, setData] = useState(null);
 
     useEffect(() => {
         // Call the createCandlestickChart function when the component is mounted
         createCandlestickChart();
+        setData(props.data)
         setupData();
     }, []);
 
-    // useEffect(() => {
-    //     console.log("chart: " + chart)
-    //     // chart.applyOptions({ width: props.width });
-    //   }, [props.width]);
+    // const setupData = async () => {
+    //     try {
+    //         await candlestickSeries.setData(props.data.candlesticks);
 
+    //         for(let i = 0; i < props.data.rects.length; i++){
+    //             let rect = chart.addLineSeries();
+    //             await rect.setData(props.data.rects[i]);
+    //         }
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // }
 
     const setupData = async () => {
+        
         try {
-            await candlestickSeries.setData(props.data.candlesticks);
+            await candlestickSeries.setData(data.candlesticks);
 
-            for(let i = 0; i < props.data.rects.length; i++){
+            for(let i = 0; i < data.rects.length; i++){
                 let rect = chart.addLineSeries();
-                await rect.setData(props.data.rects[i]);
+                await rect.setData(data.rects[i]);
             }
         } catch (error) {
             console.error(error);
@@ -41,14 +51,33 @@ export const Chart = (props :any) => {
             if (!chartElement) return;
 
             chart = createChart(chartElement, {
-                // width: props.width,
-                // height: props.height,
-                // width: 0,
                 autoSize: true,
                 height: props.height,
                 timeScale: {
-                timeVisible: true,
-                secondsVisible: false,
+                    timeVisible: true,
+                    secondsVisible: false,
+                },
+            });
+
+            chart.applyOptions({
+                crosshair: {
+                    // Change mode from default 'magnet' to 'normal'.
+                    // Allows the crosshair to move freely without snapping to datapoints
+                    mode: CrosshairMode.Normal,
+            
+                    // Vertical crosshair line (showing Date in Label)
+                    vertLine: {
+                        width: 8,
+                        color: '#C3BCDB44',
+                        style: LineStyle.Solid,
+                        labelBackgroundColor: '#9B7DFF',
+                    },
+            
+                    // Horizontal crosshair line (showing Price in Label)
+                    horzLine: {
+                        color: '#9B7DFF',
+                        labelBackgroundColor: '#9B7DFF',
+                    },
                 },
             });
 

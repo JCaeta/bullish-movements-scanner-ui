@@ -8,9 +8,10 @@ import { printError, printFileName, convertCsvToJson } from '../utils';
 import CircularProgress from '@mui/material/CircularProgress'
 import { postAnalysisRequest } from '../../pages/api/HttpRequests';
 import { Chart } from '../Chart/Chart';
+import { BarChart } from '../BarChart/BarChart';
 
 export const CandlesticksAnalyzer = () => {
-    const [longPercentage, setLongPercentage] = useState('');
+    // const [longPercentage, setLongPercentage] = useState('');
     const [maxCorrectionPercentage, setMaxCorrectionPercentage] = useState('');
     const [file, setFile] = useState<File | null>(null);
     const [fileName, setFileName] = useState('');
@@ -19,6 +20,7 @@ export const CandlesticksAnalyzer = () => {
     const [loading, setLoading] = useState(false);
     const [chartData, setChartData] = useState(null);
     const [chartWidth, setChartWidth] = useState(0);
+    const [normDistData, setNormDistData] = useState(null)
 
     useEffect(() => {
         const handleResize = () => {
@@ -36,16 +38,6 @@ export const CandlesticksAnalyzer = () => {
           window.removeEventListener('resize', handleResize);
         };
     }, []);
-
-    const handleLongPecentage = (event: any) => {
-        const inputNumber = event.target.value;
-      
-        // Allow only numbers and decimal point
-        const filteredNumber = inputNumber.replace(/[^0-9.]/g, '');
-      
-        // Update the state with the filtered number
-        setLongPercentage(filteredNumber);
-    };
 
     const handleMaxCorrectionPecentage = (event: any) => {
         const inputNumber = event.target.value;
@@ -69,24 +61,30 @@ export const CandlesticksAnalyzer = () => {
         }
     };
 
+    const clear = () => {
+        setChartData(null);
+        setNormDistData(null);
+    }
+
     const onStartClick = async () => {
         if (!file) {
             setStartError('Please select a file before starting')
         }
-        else if (longPercentage == '' || maxCorrectionPercentage == '')
+        else if (maxCorrectionPercentage == '')
         {
             setStartError('Please select a long and max correction percentages')
         } else {
+            clear()
             setStartError('')
             const fileJson = await convertCsvToJson(file);
-            console.log(fileJson);
-            console.log('Long Percentage:', longPercentage);
-            console.log('Max Correction Percentage:', maxCorrectionPercentage);
 
             setLoading(true);
-            const data = await postAnalysisRequest(fileJson, longPercentage, maxCorrectionPercentage);
+            const data = await postAnalysisRequest(fileJson, maxCorrectionPercentage);
             setLoading(false);
-            setChartData(data);
+            console.log("Candlesticks")
+            console.log(data.candlesticksChart)
+            setChartData(data.candlesticksChart);
+            setNormDistData(data.normDistChart)
         }
     };
 
@@ -116,18 +114,6 @@ export const CandlesticksAnalyzer = () => {
 
             {/* Second Row */}
             <Grid item container spacing={2} alignItems="center" justifyContent="center" >
-                <Grid item >
-                    <TextField
-                    label="Enter long percentage %"
-                    value={longPercentage}
-                    onChange={handleLongPecentage}
-                    type="text"
-                    inputProps={{
-                        inputMode: 'numeric',
-                        pattern: '[0-9]*',
-                    }}
-                    disabled={loading}/>
-                </Grid>
                 <Grid item>
                     <TextField
                     label="Enter max correction %"
@@ -160,6 +146,7 @@ export const CandlesticksAnalyzer = () => {
         </Grid>
         <Box>
             {chartData !== null?<Chart width={chartWidth} data={chartData}/>: null}
+            {normDistData !== null?<BarChart data={normDistData.data} labels={normDistData.labels}/>:null}
         </Box>
     </>);
 }

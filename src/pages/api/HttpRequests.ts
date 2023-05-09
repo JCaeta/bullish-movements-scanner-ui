@@ -3,8 +3,8 @@ import * as https from 'https';
 
 const url = "http://localhost:5000"
 
-export async function postAnalysisRequest(file: any, longPercentage: string, maxCorrectionPercentage: string){
-    const req = {file: file, longPercentage: longPercentage, maxCorrectionPercentage: maxCorrectionPercentage}
+export async function postAnalysisRequest(file: any, maxCorrectionPercentage: string){
+    const req = {file: file, maxCorrectionPercentage: maxCorrectionPercentage}
     const response = await axios.post(url + '/api/analysis', req, {
         httpsAgent: new https.Agent({ rejectUnauthorized: false }),
         headers: {
