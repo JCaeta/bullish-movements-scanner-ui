@@ -15,14 +15,25 @@ export const BarChart = (props: any) => {
           {
             label: props.title,
             data: props.data,
-            backgroundColor: "rgba(75,192,192,1)"
+            backgroundColor: "green"
           }
         ]
       },
       options: {
         scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: "Positive variation"
+                }
+            },
+
             y: {
-                beginAtZero: true
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: "Frequency"
+                }
             }
         }
       }
@@ -35,13 +46,13 @@ export const BarChart = (props: any) => {
 };
 
 BarChart.defaultProps = {
-  title: '',
-  data: [],
-  labels: []
+    title: '',
+    data: [],
+    labels: []
 };
   
 BarChart.propTypes = {
-  title: PropTypes.string,
-  data: PropTypes.arrayOf(PropTypes.number),
-  labels: PropTypes.arrayOf(PropTypes.string)
+    title: PropTypes.string,
+    data: PropTypes.arrayOf(PropTypes.number),
+    labels: PropTypes.arrayOf(PropTypes.string)
 };

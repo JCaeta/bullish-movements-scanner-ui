@@ -1,0 +1,55 @@
+@mixin message-font-size($font-size){
+    font-size: $font-size;
+
+    $breakpoints: (
+        600px: 1.8,
+        800px: 2.5,
+        1000px: 2.8,
+        1200px: 3.2,
+        1400px: 3.4,
+        1600px: 3.4,
+        1800px: 3.4,
+        2000px: 4,
+        2200px: 4,
+        2400px: 4,
+    );
+  
+    @each $bp, $multiplier in $breakpoints {
+        @media screen and (min-width: $bp) and (max-width: #{($bp + 199px)}) {
+            font-size: $font-size * $multiplier;
+        }
+
+        @media screen and (min-width: 2400px){
+            font-size: $font-size * $multiplier;
+        }
+    }
+}
+
+@mixin responsive-image-width($width){
+    width: $width;
+
+    $breakpoints: (
+        600px: 2.5,
+        800px: 3,
+        1000px: 4,
+        1200px: 5,
+        1400px: 6,
+        1600px: 6,
+        1800px: 6,
+        2000px: 6,
+        2200px: 6,
+        2400px: 6,
+    );
+  
+    @each $bp, $multiplier in $breakpoints {
+        @media screen and (min-width: $bp) and (max-width: #{($bp + 199px)}) {
+            width: $width * $multiplier;
+        }
+
+        @media screen and (min-width: 2400px){
+            width: $width * $multiplier;
+        }
+    }
+}
+
+

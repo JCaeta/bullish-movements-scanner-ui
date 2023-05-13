@@ -81,7 +81,7 @@ export const CandlesticksAnalyzer = () => {
             setLoading(true);
             const data = await postAnalysisRequest(fileJson, maxCorrectionPercentage);
             setLoading(false);
-            console.log("Candlesticks")
+            console.log("CandlesticksAnalyzer.tsx")
             console.log(data.candlesticksChart)
             setChartData(data.candlesticksChart);
             setNormDistData(data.normDistChart)

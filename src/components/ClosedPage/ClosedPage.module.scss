@@ -1,0 +1,19 @@
+@import './Responsive.module.scss';
+
+.image{
+    height: auto;
+    @include responsive-image-width(100px)
+}
+
+.container{
+    position: relative;
+    background-image: linear-gradient(to bottom right, #622828, #290D0F);
+    width: 100vw;
+    height: 100vh;
+}
+
+.message{
+    color: white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    @include message-font-size(12px);
+}
